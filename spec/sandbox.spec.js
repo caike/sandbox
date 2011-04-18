@@ -72,6 +72,20 @@ exports['it should output object if result is not string'] = function( test ) {
   });
 };
 
+exports['it should allow running against a DOM'] = function(test) {
+  sb.runDOM("window.$('h1').html();", function( output ) {
+    test.equal(output.result, 'BLA')
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
+exports['it should allow returning an object with a circular reference'] = function(test) {
+  sb.runDOM("window.$('h1')", function( output ) {
+    test.equal(typeof output.result, 'object')
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
 /* ------------------------------ GO GO GO ------------------------------ */
 if ( module == require.main )
   require( 'async_testing' ).run( __filename, process.ARGV )
