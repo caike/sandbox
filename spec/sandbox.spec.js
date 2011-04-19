@@ -111,6 +111,13 @@ exports['it should allow access to $'] = function(test) {
   }, { html: '<h1>BLA</h1>' });
 }
 
+exports['it should return modified html'] = function(test) {
+  sb.runDOM("(function() { var r = $('h1').addClass('hello'); return {result: r, failures: []} })()", function( output ) {
+    test.equal(output.result.html.trim(), '<h1 class="hello">BLA</h1>');
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
 exports['it should allow access to jQuery'] = function(test) {
   sb.runDOM("jQuery('h1')[0].outerHTML", function( output ) {
     test.equal(typeof output.result, 'string');

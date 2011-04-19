@@ -68,13 +68,12 @@ run = ->
         
       if result.result? and result.failures?
         result.result = cycle.decycle(format_result(clean_result(result.result)))
+        result.html = window.$('body')[0].innerHTML
       else
         result = cycle.decycle(format_result(clean_result(result)))
         
       return process.stdout.write JSON.stringify result: result, console: console
 
-      
-      
 
   catch e
     return process.stdout.write JSON.stringify result: e.message, console: console
