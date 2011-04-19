@@ -59,7 +59,10 @@ run = ->
   try
     jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js'], (errors, window) ->
       try
-        result = Script.runInNewContext new_code, {'window': window}
+        result = Script.runInNewContext new_code, 
+          'window': window
+          '$': window.$
+          'jQuery': window.$
       catch e
         result = e.message
         

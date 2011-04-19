@@ -103,6 +103,22 @@ exports['it should allow getting the outerHTML'] = function(test) {
   }, { html: '<h1>BLA</h1>' });
 }
 
+exports['it should allow access to $'] = function(test) {
+  sb.runDOM("$('h1')[0].outerHTML", function( output ) {
+    test.equal(typeof output.result, 'string');
+    test.equal(output.result.trim(), '<h1>BLA</h1>');
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
+exports['it should allow access to jQuery'] = function(test) {
+  sb.runDOM("jQuery('h1')[0].outerHTML", function( output ) {
+    test.equal(typeof output.result, 'string');
+    test.equal(output.result.trim(), '<h1>BLA</h1>');
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
 /* ------------------------------ GO GO GO ------------------------------ */
 if ( module == require.main )
   require( 'async_testing' ).run( __filename, process.ARGV )
