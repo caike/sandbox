@@ -2,7 +2,6 @@ util    = require( 'util' )
 Script  = process.binding('evals').Script
 jsdom   = require('jsdom')
 path    = require 'path'
-cycle   = require path.join( __dirname, 'cycle.js' )
 
 console = []
 
@@ -19,6 +18,26 @@ stdin = process.openStdin();
 
 stdin.on 'data', ( data ) ->
   code += data
+  
+format_result = ( code_result ) ->
+  if !code_result?
+    'undefined'
+  else if !code_result.selector?
+    return code_result
+  else
+    if code_result.length == 0
+      "[]"
+    else
+      return ( -> 
+        for node in code_result
+        
+          first_text_node = (child_node for child_node in node._childNodes when child_node._nodeName == '#text')[0]
+        
+          if first_text_node?
+            inner_text = first_text_node._text
+        
+          node.outerHTML.replace(node.innerHTML, inner_text).trim()
+      )().join(", ")
   
 clean_result = ( obj ) ->
   try
@@ -43,7 +62,7 @@ run = ->
       catch e
         result = e.message
       
-      return process.stdout.write JSON.stringify result: cycle.decycle(clean_result(result)), console: console
+      return process.stdout.write JSON.stringify result: format_result(clean_result(result)), console: console
 
   catch e
     return process.stdout.write JSON.stringify result: e.message, console: console

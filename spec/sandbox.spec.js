@@ -79,9 +79,18 @@ exports['it should allow running against a DOM'] = function(test) {
   }, { html: '<h1>BLA</h1>' });
 }
 
-exports['it should allow returning an object with a circular reference'] = function(test) {
+exports['it should format the result of a jquery object into a string'] = function(test) {
   sb.runDOM("window.$('h1')", function( output ) {
-    test.equal(typeof output.result, 'object')
+    test.equal(typeof output.result, 'string');
+    test.equal(output.result, '<h1>BLA</h1>');
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
+exports['it should allow getting the outerHTML'] = function(test) {
+  sb.runDOM("window.$('h1')[0].outerHTML", function( output ) {
+    test.equal(typeof output.result, 'string');
+    test.equal(output.result.trim(), '<h1>BLA</h1>');
     test.finish();
   }, { html: '<h1>BLA</h1>' });
 }
