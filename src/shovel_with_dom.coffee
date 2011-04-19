@@ -64,7 +64,7 @@ run = ->
           '$': window.$
           'jQuery': window.$
       catch e
-        result = e.message
+        result = [e.name, e.message].join(": ")
         
       if result.result? and result.failures?
         result.result = cycle.decycle(format_result(clean_result(result.result)))
