@@ -87,6 +87,14 @@ exports['it should format the result of a jquery object into a string'] = functi
   }, { html: '<h1>BLA</h1>' });
 }
 
+exports['it should expect the code to return an object with result and failures'] = function(test) {
+  sb.runDOM("(function() { var r = window.$('h1'); return {result: r, failures: []} })()", function( output ) {
+    test.equal(typeof output.result, 'object');
+    test.equal(output.result.result, '<h1>BLA</h1>');
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
 exports['it should allow getting the outerHTML'] = function(test) {
   sb.runDOM("window.$('h1')[0].outerHTML", function( output ) {
     test.equal(typeof output.result, 'string');

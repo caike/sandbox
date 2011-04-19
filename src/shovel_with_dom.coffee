@@ -62,8 +62,16 @@ run = ->
         result = Script.runInNewContext new_code, {'window': window}
       catch e
         result = e.message
+        
+      if result.result? and result.failures?
+        result.result = cycle.decycle(format_result(clean_result(result.result)))
+      else
+        result = cycle.decycle(format_result(clean_result(result)))
+        
+      return process.stdout.write JSON.stringify result: result, console: console
+
       
-      return process.stdout.write JSON.stringify result: cycle.decycle(format_result(clean_result(result))), console: console
+      
 
   catch e
     return process.stdout.write JSON.stringify result: e.message, console: console
