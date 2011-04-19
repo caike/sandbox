@@ -2,6 +2,7 @@ util    = require( 'util' )
 Script  = process.binding('evals').Script
 jsdom   = require('jsdom')
 path    = require 'path'
+cycle   = require path.join( __dirname, 'cycle.js' )
 
 console = []
 
@@ -62,7 +63,7 @@ run = ->
       catch e
         result = e.message
       
-      return process.stdout.write JSON.stringify result: format_result(clean_result(result)), console: console
+      return process.stdout.write JSON.stringify result: cycle.decycle(format_result(clean_result(result))), console: console
 
   catch e
     return process.stdout.write JSON.stringify result: e.message, console: console
