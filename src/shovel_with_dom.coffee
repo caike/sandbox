@@ -61,8 +61,10 @@ run = ->
       try
         result = Script.runInNewContext new_code, 
           'window': window
+          'document': window.document
           '$': window.$
           'jQuery': window.$
+          'console': sandbox.console
       catch e
         result = [e.name, e.message].join(": ")
         
