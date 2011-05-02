@@ -1,5 +1,5 @@
 util    = require( 'util' )
-Script  = process.binding('evals').Script
+vm      = require('vm')
 jsdom   = require('jsdom')
 path    = require 'path'
 cycle   = require path.join( __dirname, 'cycle.js' )
@@ -59,10 +59,11 @@ run = ->
   try
     jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js'], (errors, window) ->
       try
-        result = Script.runInNewContext new_code, 
+        result = vm.runInNewContext new_code, 
           'window': window
           '$': window.$
           'jQuery': window.$
+          'console': sandbox.console
       catch e
         result = [e.name, e.message].join(": ")
         

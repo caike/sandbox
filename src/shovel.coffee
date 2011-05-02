@@ -1,5 +1,5 @@
 util = require( 'util' )
-Script = process.binding('evals').Script
+vm = require('vm')
 
 console = []
 
@@ -21,7 +21,7 @@ stdin.on 'data', ( data ) ->
 run = ->
   result = (->
     try 
-      return Script.runInNewContext code.toString().replace( /\\([rn])/g, "\\\\$1" ), sandbox
+      return vm.runInNewContext code.toString().replace( /\\([rn])/g, "\\\\$1" ), sandbox
     catch e
       e.name + ': ' + e.message
   )();
