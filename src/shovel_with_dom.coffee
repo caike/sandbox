@@ -37,7 +37,7 @@ format_result = ( code_result ) ->
           if first_text_node?
             inner_text = first_text_node._text
         
-          node.outerHTML.replace(node.innerHTML, inner_text).trim()
+          node.outerHTML.trim()
       )().join(", ")
   
 clean_result = ( obj ) ->
