@@ -57,7 +57,7 @@ run = ->
   #   process.exit 0
 
   try
-    jsdom.env html, ['http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js'], (errors, window) ->
+    jsdom.env html, ["http://ajax.googleapis.com/ajax/libs/jquery/#{context.version}/jquery.min.js"], (errors, window) ->
       try
         result = vm.runInNewContext new_code, 
           'window': window

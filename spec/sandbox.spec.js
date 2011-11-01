@@ -2,7 +2,7 @@
 var Sandbox = require( '../lib/sandbox' )
   , sb = new Sandbox()
 
-/* ------------------------------ Tests ------------------------------ */
+// /* ------------------------------ Tests ------------------------------ */
 exports['it should execute basic javascript'] = function( test ) {
   sb.run( '1 + 1', function( output ) {
     test.equal( output.result, '2' )
@@ -122,6 +122,31 @@ exports['it should allow access to jQuery'] = function(test) {
   sb.runDOM("jQuery('h1')[0].outerHTML", function( output ) {
     test.equal(typeof output.result, 'string');
     test.equal(output.result.trim(), '<h1>BLA</h1>');
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
+exports['it should allow setting the jQuery version'] = function(test) {
+  var sandbox_1_5 = new Sandbox({jquery_version: "1.5.2"});
+  var sandbox_1_6 = new Sandbox({jquery_version: "1.6.2"});
+  
+  sandbox_1_5.runDOM("jQuery.fn.jquery", function( output ) {
+    test.equal(typeof output.result, 'string');
+    test.equal(output.result.trim(), '1.5.2');
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+  
+  sandbox_1_6.runDOM("jQuery.fn.jquery", function( output ) {
+    test.equal(typeof output.result, 'string');
+    test.equal(output.result.trim(), '1.6.2');
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
+exports['it should set the jQuery version to 1.5.2 by default'] = function(test) {
+  sb.runDOM("jQuery.fn.jquery", function( output ) {
+    test.equal(typeof output.result, 'string');
+    test.equal(output.result.trim(), '1.5.2');
     test.finish();
   }, { html: '<h1>BLA</h1>' });
 }
