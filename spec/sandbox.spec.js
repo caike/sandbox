@@ -1,11 +1,7 @@
 /* ------------------------------ INIT ------------------------------ */
-// var default_libs = ["http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"];
-// var jquery_1_5_libs = default_libs
-// var jquery_1_6_libs = ["http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"];
-
-var default_libs = ["http://localhost:8081/jquery?version=1.5.2"];
+var default_libs = ["http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"];
 var jquery_1_5_libs = default_libs
-var jquery_1_6_libs = ["http://localhost:8081/jquery?version=1.6.2"];
+var jquery_1_6_libs = ["http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"];
 
 var Sandbox = require( '../lib/sandbox' )
   , sb = new Sandbox({libs: default_libs})
