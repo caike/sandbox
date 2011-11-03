@@ -1,6 +1,14 @@
 /* ------------------------------ INIT ------------------------------ */
+// var default_libs = ["http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"];
+// var jquery_1_5_libs = default_libs
+// var jquery_1_6_libs = ["http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"];
+
+var default_libs = ["http://localhost:8081/jquery?version=1.5.2"];
+var jquery_1_5_libs = default_libs
+var jquery_1_6_libs = ["http://localhost:8081/jquery?version=1.6.2"];
+
 var Sandbox = require( '../lib/sandbox' )
-  , sb = new Sandbox()
+  , sb = new Sandbox({libs: default_libs})
 
 // /* ------------------------------ Tests ------------------------------ */
 exports['it should execute basic javascript'] = function( test ) {
@@ -126,9 +134,9 @@ exports['it should allow access to jQuery'] = function(test) {
   }, { html: '<h1>BLA</h1>' });
 }
 
-exports['it should allow setting the jQuery version'] = function(test) {
-  var sandbox_1_5 = new Sandbox({jquery_version: "1.5.2"});
-  var sandbox_1_6 = new Sandbox({jquery_version: "1.6.2"});
+exports['it should allow setting js libraries to use'] = function(test) {
+  var sandbox_1_5 = new Sandbox({libs: jquery_1_5_libs});
+  var sandbox_1_6 = new Sandbox({libs: jquery_1_6_libs});
   
   sandbox_1_5.runDOM("jQuery.fn.jquery", function( output ) {
     test.equal(typeof output.result, 'string');
@@ -139,6 +147,15 @@ exports['it should allow setting the jQuery version'] = function(test) {
   sandbox_1_6.runDOM("jQuery.fn.jquery", function( output ) {
     test.equal(typeof output.result, 'string');
     test.equal(output.result.trim(), '1.6.2');
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+}
+
+exports['it should allow setting no libs'] = function(test) {
+  var sandbox_libless = new Sandbox();
+  
+  sandbox_libless.runDOM("1 + 1", function( output ) {
+    test.equal(output.result, 2);
     test.finish();
   }, { html: '<h1>BLA</h1>' });
 }

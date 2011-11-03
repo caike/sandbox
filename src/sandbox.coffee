@@ -5,7 +5,7 @@ spawn = require('child_process').spawn
 
 class Sandbox
   constructor: (@options={}) -> 
-    @jquery_version = options?.jquery_version or "1.5.2"
+    @libs = options?.libs
     @options = Sandbox.options
     
   runDOM: ( code, hollaback, context = {} ) -> 
@@ -26,7 +26,7 @@ class Sandbox
     child.stdin.write JSON.stringify
       code: code
       html: context.html
-      version: @jquery_version
+      libs: @libs
       
     child.stdin.end()
 

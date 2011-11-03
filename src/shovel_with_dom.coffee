@@ -57,7 +57,7 @@ run = ->
   #   process.exit 0
 
   try
-    jsdom.env html, ["http://ajax.googleapis.com/ajax/libs/jquery/#{context.version}/jquery.min.js"], (errors, window) ->
+    jsdom.env html, context.libs, (errors, window) ->
       try
         result = vm.runInNewContext new_code, 
           'window': window
@@ -74,7 +74,7 @@ run = ->
         else
           result = cycle.decycle(format_result(clean_result(result)))
         
-        result.html = window.$('body')[0].innerHTML
+        result.html = window.document.getElementsByTagName("body")[0].innerHTML
       catch e
         result = [e.name, e.message].join(": ")
         
