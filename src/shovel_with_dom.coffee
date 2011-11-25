@@ -52,32 +52,31 @@ run = ->
   context   = JSON.parse code
   html      = context.html
   new_code  = context.code
-  
-  # process.stdout.on 'drain', ->
-  #   process.exit 0
+  coffeeNodes = require('coffee-script').nodes(context.coffee) if context.coffee?
 
-  try
+  # try
     jsdom.env html, context.libs, (errors, window) ->
       try
-        result = vm.runInNewContext new_code, 
+        result = vm.runInNewContext new_code,
           'window': window
           'document': window.document
           '$': window.$
           'jQuery': window.$
           'console': sandbox.console
+          'coffeeNodes': coffeeNodes
       catch e
         result = [e.name, e.message].join(": ")
-        
-      try   
+
+      try
         if result.result? and result.failures?
           result.result = cycle.decycle(format_result(clean_result(result.result)))
         else
           result = cycle.decycle(format_result(clean_result(result)))
-        
+
         result.html = window.document.getElementsByTagName("body")[0].innerHTML
       catch e
         result = [e.name, e.message].join(": ")
-        
+
       return process.stdout.write JSON.stringify result: result, console: console
 
 

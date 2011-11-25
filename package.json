@@ -3,8 +3,10 @@
 , "homepage" : "http://gf3.github.com/sandbox/"
 , "author" : "Gianni Chiappetta <gianni@runlevel6.org> (http://gf3.ca)"
 , "contributors":
-  [ "Dominic Tarr (http://cyber-hobo.blogspot.com)"
-  ]
+  [ "Dominic Tarr (http://cyber-hobo.blogspot.com)"]
+,  "dependencies": {
+    "coffee-script": "1.0.1"
+  }
 , "version" : "0.7.1"
 , "main" : "./lib/sandbox"
 , "directories" : { "lib" : "./lib" }

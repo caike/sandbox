@@ -19,6 +19,10 @@ stdin.on 'data', ( data ) ->
 
 # // Run code
 run = ->
+  context = JSON.parse code
+  code = context.code
+  sandbox.coffeeNodes = require('coffee-script').nodes(context.coffee) if context.coffee?
+
   result = (->
     try 
       return vm.runInNewContext code.toString().replace( /\\([rn])/g, "\\\\$1" ), sandbox

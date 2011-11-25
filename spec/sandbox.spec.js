@@ -156,6 +156,24 @@ exports['it should allow setting no libs'] = function(test) {
   }, { html: '<h1>BLA</h1>' });
 }
 
+exports['it should accept a coffeescript option and expose the coffee nodes to the sandbox on runDom'] = function(test) {
+  var sandbox_with_coffee = new Sandbox({coffeescript: 'hello name'});
+  
+  sandbox_with_coffee.runDOM("coffeeNodes.compile()", function( output ) {
+    test.ok(/hello\(name\)/.test(output.result.trim()));
+    test.finish();
+  }, { html: '<h1>BLA</h1>' });
+
+}
+
+exports['it should accept a coffeescript option and expose the coffee nodes to the sandbox on run'] = function(test) {
+  var sandbox_with_coffee = new Sandbox({coffeescript: 'hello name'});
+
+  sandbox_with_coffee.run( 'coffeeNodes.compile()', function( output ) {
+    test.ok( /hello\(name\)/.test(output.result.trim()) )
+    test.finish()
+  })
+}
 exports['it should set the jQuery version to 1.5.2 by default'] = function(test) {
   sb.runDOM("jQuery.fn.jquery", function( output ) {
     test.equal(typeof output.result, 'string');

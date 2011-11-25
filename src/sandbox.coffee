@@ -6,6 +6,7 @@ spawn = require('child_process').spawn
 class Sandbox
   constructor: (@options={}) -> 
     @libs = options?.libs
+    @coffeescript = options?.coffeescript
     @options = Sandbox.options
     
   runDOM: ( code, hollaback, context = {} ) -> 
@@ -27,6 +28,7 @@ class Sandbox
       code: code
       html: context.html
       libs: @libs
+      coffee: @coffeescript
       
     child.stdin.end()
 
@@ -52,9 +54,12 @@ class Sandbox
       clearTimeout timer
       hollaback.call( this, JSON.parse( stdout ) )
     )
-    
+
     # Go
-    child.stdin.write code 
+    child.stdin.write JSON.stringify
+      code: code
+      coffee: @coffeescript
+
     child.stdin.end()
     
     timer = setTimeout -> 
