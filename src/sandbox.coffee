@@ -24,7 +24,7 @@ class Sandbox
       resultObject = try 
         JSON.parse stdout
       catch err
-        { result: err }
+        { result: err.message }
     
       hollaback.call this, resultObject
 
