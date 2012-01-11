@@ -57,7 +57,13 @@ class Sandbox
     child.stdout.on( 'data', output )
     child.on( 'exit', ( code ) -> 
       clearTimeout timer
-      hollaback.call( this, JSON.parse( stdout ) )
+
+      resultObject = try 
+        JSON.parse stdout
+      catch err
+        { result: err.message }
+
+      hollaback.call this, resultObject
     )
 
     # Go
