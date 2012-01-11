@@ -52,9 +52,10 @@ run = ->
   context   = JSON.parse code
   html      = context.html
   new_code  = context.code
-  coffeeNodes = require('coffee-script').nodes(context.coffee) if context.coffee?
 
-  # try
+  try
+    coffeeNodes = require('coffee-script').nodes(context.coffee) if context.coffee?
+
     jsdom.env html, context.libs, (errors, window) ->
       try
         result = vm.runInNewContext new_code,
