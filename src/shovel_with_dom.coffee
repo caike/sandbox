@@ -2,9 +2,14 @@ util    = require( 'util' )
 vm      = require('vm')
 jsdom   = require('jsdom')
 path    = require 'path'
+underscore = require "underscore"
 cycle   = require path.join( __dirname, 'cycle.js' )
 
 console = []
+
+comm = (m) ->
+  process.send m
+  process.exit()
 
 sandbox =
   console:
@@ -13,12 +18,13 @@ sandbox =
 
 sandbox.print = sandbox.console.log;
 
-# // Get code
-code = ''
-stdin = process.openStdin();
+code = {}
 
-stdin.on 'data', ( data ) ->
-  code += data
+process.on 'message', ( message ) ->
+  if message == "done"
+    run()
+  else
+    underscore.extend code, message
   
 format_result = ( code_result ) ->
   if !code_result?
@@ -49,7 +55,7 @@ clean_result = ( obj ) ->
 
 # // Run code
 run = ->
-  context   = JSON.parse code
+  context   = code
   html      = context.html
   new_code  = context.code
 
@@ -78,11 +84,8 @@ run = ->
       catch e
         result = [e.name, e.message].join(": ")
 
-      return process.stdout.write JSON.stringify result: result, console: console
+      return comm(result: result, console: console)
 
 
   catch e
-    return process.stdout.write JSON.stringify result: e.message, console: console
-
-
-stdin.on 'end', run
+    return comm(result: e.message, console: console)

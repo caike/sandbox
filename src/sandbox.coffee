@@ -1,6 +1,7 @@
 fs = require 'fs'
 path = require 'path'
-spawn = require('child_process').spawn
+fork = require('child_process').fork
+underscore = require 'underscore'
 # cycle = require path.join( __dirname, 'cycle.js' )
 # hello world
 
@@ -11,73 +12,63 @@ class Sandbox
     @options = Sandbox.options
     
   runDOM: ( code, hollaback, context = {} ) -> 
-    child = spawn @options.node, [@options.shovel_with_dom]
+    child = fork @options.shovel_with_dom
 
-    stdout = ''
+    message = {}
 
-    output = ( data ) -> stdout += data if !!data
+    output = ( data ) -> 
+      underscore.extend message, data
 
     # Listen
-    child.stdout.on( 'data', output )
+    child.on( 'message', output )
     child.on 'exit', ( code ) -> 
       clearTimeout timer
-
-      resultObject = try 
-        JSON.parse stdout
-      catch err
-        { result: err.message }
-    
-      hollaback.call this, resultObject
+      hollaback.call this, message
 
     # Go
-    child.stdin.write JSON.stringify
+    child.send
       code: code
       html: context.html
       libs: @libs
       coffee: @coffeescript
       
-    child.stdin.end()
+    child.send "done"
 
     timer = setTimeout -> 
 
-      child.stdout.removeListener 'output', output
-      stdout = JSON.stringify { result: 'TimeoutError', console: [] }
+      child.removeListener 'message', output
+      message = { result: 'TimeoutError', console: [] }
       child.kill 'SIGKILL'
 
     , @options.timeout 
     
   
   run: ( code, hollaback ) -> 
-    child = spawn @options.node, [@options.shovel]
+    child = fork @options.shovel
     
-    stdout = ''
+    message = {}
     
-    output = ( data ) -> stdout += data if !!data
+    output = ( data ) -> 
+      underscore.extend message, data
         
     # Listen
-    child.stdout.on( 'data', output )
-    child.on( 'exit', ( code ) -> 
+    child.on 'message', output
+    child.on 'exit', (code) -> 
       clearTimeout timer
-
-      resultObject = try 
-        JSON.parse stdout
-      catch err
-        { result: err.message }
-
-      hollaback.call this, resultObject
-    )
+      hollaback.call this, message
+    
 
     # Go
-    child.stdin.write JSON.stringify
+    child.send
       code: code
       coffee: @coffeescript
 
-    child.stdin.end()
+    child.send "done"
     
     timer = setTimeout -> 
       
-      child.stdout.removeListener 'output', output
-      stdout = JSON.stringify { result: 'TimeoutError', console: [] }
+      child.removeListener 'message', output
+      message = { result: 'TimeoutError', console: [] }
       child.kill 'SIGKILL'
       
     , @options.timeout 

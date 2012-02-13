@@ -1,5 +1,6 @@
 util = require( 'util' )
 vm = require('vm')
+underscore = require "underscore"
 
 console = []
 
@@ -10,16 +11,22 @@ sandbox =
 
 sandbox.print = sandbox.console.log;
 
-# // Get code
-code = ''
-stdin = process.openStdin();
+comm = (m) ->
+  process.send m
+  process.exit()
 
-stdin.on 'data', ( data ) ->
-  code += data
+# // Get code
+code = {}
+
+process.on 'message', ( message ) ->
+  if message == "done"
+    run()
+  else
+    underscore.extend code, message
 
 # // Run code
 run = ->
-  context = JSON.parse code
+  context = code
   code = context.code
   sandbox.coffeeNodes = require('coffee-script').nodes(context.coffee) if context.coffee?
 
@@ -30,16 +37,12 @@ run = ->
       e.name + ': ' + e.message
   )();
   
-  process.stdout.on 'drain', ->
-    process.exit 0
-
   if typeof result == 'string'
     output = util.inspect(result)
   else
     output = result
     
-  process.stdout.write JSON.stringify
+  comm
     result: output
     console: console
 
-stdin.on 'end', run
