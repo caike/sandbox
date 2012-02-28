@@ -10,12 +10,11 @@
     "nodeunit": "0.6.4",
     "underscore": "1.2.3"
   }
-, "version" : "0.9.1"
+, "version" : "0.9.2"
 , "main" : "./lib/sandbox"
 , "directories" : { "lib" : "./lib" }
 , "engines": {
-    "node": "0.6.11",
-    "npm": "1.1.0-3"
+    "node": "0.6.11"
   }
 , "repository" :
   { "type" : "git"
